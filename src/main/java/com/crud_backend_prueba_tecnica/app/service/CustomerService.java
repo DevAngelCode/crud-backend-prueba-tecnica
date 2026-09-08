@@ -2,16 +2,19 @@ package com.crud_backend_prueba_tecnica.app.service;
 
 import java.util.List;
 
-import com.crud_backend_prueba_tecnica.app.entity.CustomerEntity;
+import com.crud_backend_prueba_tecnica.app.dto.reponse.CustomerResponse;
+import com.crud_backend_prueba_tecnica.app.dto.reponse.MessageResponse;
+import com.crud_backend_prueba_tecnica.app.dto.request.CustomerCreateRequest;
+import com.crud_backend_prueba_tecnica.app.dto.request.CustomerUpdateRequest;
 
 public interface CustomerService {
-	CustomerEntity create(CustomerEntity customer);
+	MessageResponse create(CustomerCreateRequest request);
 
-	List<CustomerEntity> findAll();
+	MessageResponse update(Long id, CustomerUpdateRequest request);
 
-	CustomerEntity findById(Long id);
+	List<CustomerResponse> findAll();
 
-	CustomerEntity update(Long id, CustomerEntity customer);
+	CustomerResponse findById(Long id);
 
-	void delete(Long id);
+	MessageResponse delete(Long id);
 }
