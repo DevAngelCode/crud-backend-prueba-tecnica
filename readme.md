@@ -20,14 +20,6 @@ API REST del CRUD de clientes.
 
 El proyecto usa la base `customer_db` con la tabla `customers` (1000 registros de prueba).
 
-### Crear la base de datos
-
-Ejecuta el script `datos inciales.sql` (incluido en la raíz del proyecto) en tu MySQL:
-
-```bash
-mysql -u root -p < "datos inciales.sql"
-```
-
 ### Estructura de `customers`
 
 | Campo               | Tipo         | Descripción                        |
@@ -123,10 +115,4 @@ curl "http://localhost:8080/api/v1/customers?page=1&size=10"
 
 ```bash
 curl "http://localhost:8080/api/v1/customers?customerId=abc"
-```
-
-## Tests
-
-```bash
-./mvnw test
 ```
