@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.crud_backend_prueba_tecnica.app.dto.reponse.CustomerResponse;
 import com.crud_backend_prueba_tecnica.app.dto.reponse.MessageResponse;
+import com.crud_backend_prueba_tecnica.app.dto.reponse.PageResponse;
 import com.crud_backend_prueba_tecnica.app.dto.request.CustomerCreateRequest;
 import com.crud_backend_prueba_tecnica.app.dto.request.CustomerUpdateRequest;
 import com.crud_backend_prueba_tecnica.app.service.CustomerService;
@@ -35,9 +37,20 @@ public class CustomerController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<CustomerResponse>> findAll() {
+	public ResponseEntity<PageResponse<CustomerResponse>> findAll(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(required = false) String customerId) {
 
-		return ResponseEntity.ok(customerService.findAll());
+		if (page < 0) {
+			page = 0;
+		}
+
+		if (size < 1 || size > 100) {
+			size = 10;
+		}
+
+		return ResponseEntity.ok(customerService.findAll(page, size, customerId));
 	}
 
 	@GetMapping("/{id}")

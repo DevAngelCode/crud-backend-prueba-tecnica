@@ -2,11 +2,16 @@ package com.crud_backend_prueba_tecnica.app.service.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crud_backend_prueba_tecnica.app.dto.reponse.CustomerResponse;
 import com.crud_backend_prueba_tecnica.app.dto.reponse.MessageResponse;
+import com.crud_backend_prueba_tecnica.app.dto.reponse.PageResponse;
 import com.crud_backend_prueba_tecnica.app.dto.request.CustomerCreateRequest;
 import com.crud_backend_prueba_tecnica.app.dto.request.CustomerUpdateRequest;
 import com.crud_backend_prueba_tecnica.app.entity.CustomerEntity;
@@ -70,8 +75,22 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<CustomerResponse> findAll() {
-		return customerRepository.findAll().stream().map(this::toResponse).toList();
+	public PageResponse<CustomerResponse> findAll(int page, int size, String customerId) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+		Page<CustomerEntity> customersPage;
+
+		if (customerId == null || customerId.isBlank()) {
+			customersPage = customerRepository.findAll(pageable);
+		} else {
+			customersPage = customerRepository.findByCustomerIdContainingIgnoreCase(customerId.trim(), pageable);
+		}
+
+		List<CustomerResponse> content = customersPage.getContent().stream()
+				.map(this::toResponse)
+				.toList();
+
+		return new PageResponse<>(content, customersPage.getNumber(), customersPage.getSize(),
+				customersPage.getTotalElements(), customersPage.getTotalPages());
 	}
 
 	@Override
